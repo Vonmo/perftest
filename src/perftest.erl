@@ -20,7 +20,7 @@ sequential(Cycles, F) ->
 		fun () -> executeMultipleTimes(Cycles, F) end).
 
 sequentialTimings(Cycles, F) ->
-	[ begin S = now(), F(), E = now(), timer:now_diff(E, S) end || _ <- lists:seq(1, Cycles) ].
+	[ begin S = erlang:timestamp(), F(), E = erlang:timestamp(), timer:now_diff(E, S) end || _ <- lists:seq(1, Cycles) ].
 
 parallel(Parallel, Cycles, F) ->
 	perftest("Parallel " ++ integer_to_list(Parallel), Cycles, fun () ->
@@ -36,9 +36,9 @@ parallel(Parallel, Cycles, F) ->
 	end).
 
 perftest(Name, Cycles, F) ->
-	{_, StartSecs, StartMS} = now(),
+	{_, StartSecs, StartMS} = erlang:timestamp(),
 	F(),
-	{_, StopSecs, StopMS} = now(),
+	{_, StopSecs, StopMS} = erlang:timestamp(),
 	MS = (StopSecs * 1000 + StopMS / 1000)
 		- (StartSecs * 1000 + StartMS / 1000),
 	CPS = round(1000 * Cycles / MS),
