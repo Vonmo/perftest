@@ -3,6 +3,7 @@
 
 -module(perftest).
 -export([comprehensive/2, sequential/2, sequentialTimings/2, parallel/3]).
+-include_lib("eunit/include/eunit.hrl").
 
 comprehensive(Cycles, F) ->
 	sequential(round(Cycles/10), F),	% Warming up 1
@@ -42,7 +43,7 @@ perftest(Name, Cycles, F) ->
 	MS = (StopSecs * 1000 + StopMS / 1000)
 		- (StartSecs * 1000 + StartMS / 1000),
 	CPS = round(1000 * Cycles / MS),
-	io:format("~s ~p cycles in ~~~p seconds (~p cycles/s)~n",
+	?debugFmt("~s ~p cycles in ~~~p seconds (~p cycles/s)~n",
 		[Name, Cycles, round(MS / 1000), CPS]),
 	CPS.
 
